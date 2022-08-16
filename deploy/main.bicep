@@ -60,18 +60,18 @@ resource appServiceApp 'Microsoft.Web/sites@2021-01-15' = {
   properties: {
     serverFarmId: appServicePlan.id
     httpsOnly: true
-    siteConfig: {
-      appSettings: [
-        {
-          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          value: applicationInsights.properties.InstrumentationKey
-        }
-        {
-          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
-          value: applicationInsights.properties.ConnectionString
-        }
-      ]
-    }
+    // siteConfig: {
+    //   appSettings: [
+    //     {
+    //       name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+    //       value: applicationInsights.properties.InstrumentationKey
+    //     }
+    //     {
+    //       name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+    //       value: applicationInsights.properties.ConnectionString
+    //     }
+    //   ]
+    // }
   }
 }
 
