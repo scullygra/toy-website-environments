@@ -39,8 +39,7 @@ jobs:
         deploymentName: ${{ github.run_number }}
         resourceGroupName: ${{ inputs.resourceGroupName }}
         template: ./deploy/main.bicep
-        parameters: >
-          environmentType=${{ inputs.environmentType }}
+        environmentType: ${{ inputs.environmentType }}
         deploymentMode: Validate
     - if: inputs.environmentType == 'Production'
       uses: azure/arm-deploy@v1
