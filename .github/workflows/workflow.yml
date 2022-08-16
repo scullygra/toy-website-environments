@@ -9,14 +9,14 @@ on:
 
 jobs:
 
-  # # Lint the Bicep file.
-  # lint:
-  #   uses: ./.github/workflows/lint.yml
+  # Lint the Bicep file.
+  lint:
+    uses: ./.github/workflows/lint.yml
 
   # Deploy to the test environment.
   deploy-test:
     uses: ./.github/workflows/deploy.yml
-    # needs: lint
+    needs: lint
     with:
       environmentType: Test
       resourceGroupName: ToyWebsiteTest

@@ -37,6 +37,7 @@ var environmentConfigurationMap = {
     appServicePlan: {
       sku: {
         name: 'F1'
+        capacity: 1
       }
     }
     storageAccount: {
@@ -47,49 +48,49 @@ var environmentConfigurationMap = {
   }
 }
 
-// resource appServicePlan 'Microsoft.Web/serverfarms@2021-01-15' = {
-//   name: appServicePlanName
-//   location: location
-//   sku: environmentConfigurationMap[environmentType].appServicePlan.sku
-// }
+resource appServicePlan 'Microsoft.Web/serverfarms@2021-01-15' = {
+  name: appServicePlanName
+  location: location
+  sku: environmentConfigurationMap[environmentType].appServicePlan.sku
+}
 
-// resource appServiceApp 'Microsoft.Web/sites@2021-01-15' = {
-//   name: appServiceAppName
-//   location: location
-//   properties: {
-//     serverFarmId: appServicePlan.id
-//     httpsOnly: true
-//     siteConfig: {
-//       appSettings: [
-//         {
-//           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-//           value: applicationInsights.properties.InstrumentationKey
-//         }
-//         {
-//           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
-//           value: applicationInsights.properties.ConnectionString
-//         }
-//       ]
-//     }
-//   }
-// }
+resource appServiceApp 'Microsoft.Web/sites@2021-01-15' = {
+  name: appServiceAppName
+  location: location
+  properties: {
+    serverFarmId: appServicePlan.id
+    httpsOnly: true
+    siteConfig: {
+      appSettings: [
+        {
+          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+          value: applicationInsights.properties.InstrumentationKey
+        }
+        {
+          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+          value: applicationInsights.properties.ConnectionString
+        }
+      ]
+    }
+  }
+}
 
-// resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
-//   name: applicationInsightsName
-//   location: location
-//   kind: 'web'
-//   properties: {
-//     Application_Type: 'web'
-//     Request_Source: 'rest'
-//     Flow_Type: 'Bluefield'
-//   }
-// }
+resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: applicationInsightsName
+  location: location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    Request_Source: 'rest'
+    Flow_Type: 'Bluefield'
+  }
+}
 
-// resource storageAccount 'Microsoft.Storage/storageAccounts@2021-04-01' = {
-//   name: storageAccountName
-//   location: location
-//   kind: 'StorageV2'
-//   sku: environmentConfigurationMap[environmentType].storageAccount.sku
-// }
+resource storageAccount 'Microsoft.Storage/storageAccounts@2021-04-01' = {
+  name: storageAccountName
+  location: location
+  kind: 'StorageV2'
+  sku: environmentConfigurationMap[environmentType].storageAccount.sku
+}
 
-// output appServiceAppHostName string = appServiceApp.properties.defaultHostName
+output appServiceAppHostName string = appServiceApp.properties.defaultHostName
