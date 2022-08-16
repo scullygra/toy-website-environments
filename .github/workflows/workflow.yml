@@ -16,7 +16,7 @@ jobs:
   # Deploy to the test environment.
   deploy-test:
     uses: ./.github/workflows/deploy.yml
-    needs: lint
+    # needs: lint
     with:
       environmentType: Test
       resourceGroupName: ToyWebsiteTest
