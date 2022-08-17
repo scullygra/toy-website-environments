@@ -33,7 +33,7 @@ jobs:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
     - if: inputs.environmentType != 'Production'
-    - uses: azure/arm-deploy@v1
+      uses: azure/arm-deploy@v1
       name: Run preflight validation
       with:
         deploymentName: ${{ github.run_number }}
