@@ -3,9 +3,9 @@ name: deploy
 on:
   workflow_call:
     inputs:
-      # environmentType:
-      #   required: true
-      #   type: string
+      environmentType:
+        required: true
+        type: string
       resourceGroupName:
         required: true
         type: string
@@ -32,30 +32,30 @@ jobs:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-    # - if: inputs.environmentType != 'Production'
+    - if: inputs.environmentType != 'Production'
     - uses: azure/arm-deploy@v1
       name: Run preflight validation
       with:
         deploymentName: ${{ github.run_number }}
         resourceGroupName: ${{ inputs.resourceGroupName }}
         template: ./deploy/main.bicep
-        # parameters: >
-        #   environmentType=${{ inputs.environmentType }}
+        parameters: >
+          environmentType=${{ inputs.environmentType }}
         deploymentMode: Validate
-    # - if: inputs.environmentType == 'Production'
-    #   uses: azure/arm-deploy@v1
-    #   name: Run what-if
-    #   with:
-    #     failOnStdErr: false
-    #     resourceGroupName: ${{ inputs.resourceGroupName }}
-    #     template: ./deploy/main.bicep
-    #     parameters: >
-    #       environmentType=${{ inputs.environmentType }}
-    #     additionalArguments: --what-if
+    - if: inputs.environmentType == 'Production'
+      uses: azure/arm-deploy@v1
+      name: Run what-if
+      with:
+        failOnStdErr: false
+        resourceGroupName: ${{ inputs.resourceGroupName }}
+        template: ./deploy/main.bicep
+        parameters: >
+          environmentType=${{ inputs.environmentType }}
+        additionalArguments: --what-if
 
   deploy:
     needs: validate
-    # environment: ${{ inputs.environmentType }}
+    environment: ${{ inputs.environmentType }}
     runs-on: ubuntu-latest
     outputs:
       appServiceAppHostName: ${{ steps.deploy.outputs.appServiceAppHostName }}
@@ -75,8 +75,8 @@ jobs:
         deploymentName: ${{ github.run_number }}
         resourceGroupName: ${{ inputs.resourceGroupName }}
         template: ./deploy/main.bicep
-        # parameters: >
-        #   environmentType=${{ inputs.environmentType }}
+        parameters: >
+          environmentType=${{ inputs.environmentType }}
     
   smoke-test:
     runs-on: ubuntu-latest
