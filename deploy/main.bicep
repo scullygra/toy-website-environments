@@ -12,26 +12,26 @@ param environmentType string
 @maxLength(13)
 param resourceNameSuffix string = uniqueString(resourceGroup().id)
 
-@description('Describes plan\'s pricing tier and instance size. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/')
-@allowed([
-  'F1'
-  'D1'
-  'B1'
-  'B2'
-  'B3'
-  'S1'
-  'S2'
-  'S3'
-  'P1'
-  'P2'
-  'P3'
-  'P4'
-])
-param sku string = 'B1'
+// @description('Describes plan\'s pricing tier and instance size. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/')
+// @allowed([
+//   'F1'
+//   'D1'
+//   'B1'
+//   'B2'
+//   'B3'
+//   'S1'
+//   'S2'
+//   'S3'
+//   'P1'
+//   'P2'
+//   'P3'
+//   'P4'
+// ])
+// param sku string = 'B1'
 
 // Define the names for resources.
-// var appServiceAppName = 'toy-website-${resourceNameSuffix}'
-var appServicePlanName = 'toy-website'
+var appServiceAppName = 'toy-website-${resourceNameSuffix}'
+var appServicePlanName = 'toywebsite'
 var applicationInsightsName = 'toywebsite'
 var storageAccountName = 'mystorage${resourceNameSuffix}'
 
@@ -53,7 +53,8 @@ var environmentConfigurationMap = {
   Test: {
     appServicePlan: {
       sku: {
-        name: 'F1'
+        name: 'B1'
+        capacity: 1
       }
     }
     storageAccount: {
@@ -64,43 +65,40 @@ var environmentConfigurationMap = {
   }
 }
 
-// resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
-//   name: appServicePlanName
-//   location: location
-//   // sku: environmentConfigurationMap[environmentType].appServicePlan.sku
-//   sku: {
-//     name: 'F1'
-//   }
-// }
-
-resource appServicePlan 'Microsoft.Web/serverfarms@2021-03-01' = {
+resource appServicePlan 'Microsoft.Web/serverfarms@2021-01-15' = {
   name: appServicePlanName
   location: location
-  sku: {
-    name: sku
-  }
+  sku: environmentConfigurationMap[environmentType].appServicePlan.sku
 }
 
-// resource appServiceApp 'Microsoft.Web/sites@2021-01-15' = {
-//   name: appServiceAppName
+// resource appServicePlan 'Microsoft.Web/serverfarms@2021-03-01' = {
+//   name: appServicePlanName
 //   location: location
-//   properties: {
-//     serverFarmId: appServicePlan.id
-//     httpsOnly: true
-//     siteConfig: {
-//       appSettings: [
-//         {
-//           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-//           value: applicationInsights.properties.InstrumentationKey
-//         }
-//         {
-//           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
-//           value: applicationInsights.properties.ConnectionString
-//         }
-//       ]
-//     }
+//   sku: {
+//     name: sku
 //   }
 // }
+
+resource appServiceApp 'Microsoft.Web/sites@2021-01-15' = {
+  name: appServiceAppName
+  location: location
+  properties: {
+    serverFarmId: appServicePlan.id
+    httpsOnly: true
+    siteConfig: {
+      appSettings: [
+        {
+          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+          value: applicationInsights.properties.InstrumentationKey
+        }
+        {
+          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+          value: applicationInsights.properties.ConnectionString
+        }
+      ]
+    }
+  }
+}
 
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: applicationInsightsName
@@ -120,4 +118,4 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   sku: environmentConfigurationMap[environmentType].storageAccount.sku
 }
 
-// output appServiceAppHostName string = appServiceApp.properties.defaultHostName
+output appServiceAppHostName string = appServiceApp.properties.defaultHostName
