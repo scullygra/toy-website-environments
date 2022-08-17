@@ -12,23 +12,6 @@ param environmentType string
 @maxLength(13)
 param resourceNameSuffix string = uniqueString(resourceGroup().id)
 
-// @description('Describes plan\'s pricing tier and instance size. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/')
-// @allowed([
-//   'F1'
-//   'D1'
-//   'B1'
-//   'B2'
-//   'B3'
-//   'S1'
-//   'S2'
-//   'S3'
-//   'P1'
-//   'P2'
-//   'P3'
-//   'P4'
-// ])
-// param sku string = 'B1'
-
 // Define the names for resources.
 var appServiceAppName = 'toy-website-${resourceNameSuffix}'
 var appServicePlanName = 'toywebsite'
@@ -53,8 +36,7 @@ var environmentConfigurationMap = {
   Test: {
     appServicePlan: {
       sku: {
-        name: 'B1'
-        capacity: 1
+        name: 'F1'
       }
     }
     storageAccount: {
@@ -70,14 +52,6 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2021-01-15' = {
   location: location
   sku: environmentConfigurationMap[environmentType].appServicePlan.sku
 }
-
-// resource appServicePlan 'Microsoft.Web/serverfarms@2021-03-01' = {
-//   name: appServicePlanName
-//   location: location
-//   sku: {
-//     name: sku
-//   }
-// }
 
 resource appServiceApp 'Microsoft.Web/sites@2021-01-15' = {
   name: appServiceAppName
