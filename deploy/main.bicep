@@ -27,7 +27,7 @@ param resourceNameSuffix string = uniqueString(resourceGroup().id)
   'P3'
   'P4'
 ])
-param sku string = 'F1'
+param sku string = 'B1'
 
 // Define the names for resources.
 // var appServiceAppName = 'toy-website-${resourceNameSuffix}'
@@ -38,12 +38,12 @@ var storageAccountName = 'mystorage${resourceNameSuffix}'
 // Define the SKUs for each component based on the environment type.
 var environmentConfigurationMap = {
   Production: {
-    appServicePlan: {
-      sku: {
-        name: 'S1'
-        capacity: 1
-      }
-    }
+    // appServicePlan: {
+    //   sku: {
+    //     name: 'S1'
+    //     capacity: 1
+    //   }
+    // }
     storageAccount: {
       sku: {
         name: 'Standard_LRS'
@@ -51,11 +51,11 @@ var environmentConfigurationMap = {
     }
   }
   Test: {
-    appServicePlan: {
-      sku: {
-        name: 'F1'
-      }
-    }
+    // appServicePlan: {
+    //   sku: {
+    //     name: 'F1'
+    //   }
+    // }
     storageAccount: {
       sku: {
         name: 'Standard_GRS'
