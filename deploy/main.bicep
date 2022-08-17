@@ -51,7 +51,11 @@ var environmentConfigurationMap = {
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: appServicePlanName
   location: location
-  sku: environmentConfigurationMap[environmentType].appServicePlan.sku
+  // sku: environmentConfigurationMap[environmentType].appServicePlan.sku
+  sku: {
+    tier: 'Basic'
+    name: 'B1'
+  }
 }
 
 // resource appServiceApp 'Microsoft.Web/sites@2021-01-15' = {
